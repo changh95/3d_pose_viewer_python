@@ -1,5 +1,5 @@
 from viewerlib import *
-
+import numpy as np
 
 if __name__ == "__main__":
     # Setup window
@@ -7,7 +7,7 @@ if __name__ == "__main__":
     window = Window(win_cfg)
 
     # Setup camera
-    cam_cfg = CameraConfig(pr.Vector3(18.0, 16.0, 18.0), pr.Vector3(0.0, 0.0, 0.0), pr.Vector3(0.0, 1.0, 0.0), 45.0, pr.CameraProjection.CAMERA_PERSPECTIVE, pr.CAMERA_THIRD_PERSON)
+    cam_cfg = CameraConfig(np.array([18.0, 16.0, 18.0]), np.array([0.0, 0.0, 0.0]), np.array([0.0, 1.0, 0.0]), 45.0, pr.CameraProjection.CAMERA_PERSPECTIVE, pr.CAMERA_THIRD_PERSON)
     cam = Camera3D(cam_cfg)
 
     start_position = pr.Vector3(0.0, 0.0, 0.0)

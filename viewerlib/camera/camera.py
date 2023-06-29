@@ -14,9 +14,9 @@ class Camera3D:
         self.camera_view_person = camera_config.camera_view_person
 
         self.camera = pr.Camera3D()
-        self.camera.position = self.position
-        self.camera.target = self.target
-        self.camera.up = self.up
+        self.camera.position = pr.Vector3(self.position[0], self.position[1], self.position[2])
+        self.camera.target = pr.Vector3(self.target[0], self.target[1], self.target[2])
+        self.camera.up = pr.Vector3(self.up[0], self.up[1], self.up[2])
         self.camera.fovy = self.fovy
         self.camera.projection = self.projection
 
