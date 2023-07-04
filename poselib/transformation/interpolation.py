@@ -51,17 +51,3 @@ def average_position(position1: np.array,
     :return: Averaged position vector
     """
     return 0.5 * (position1 + position2)
-
-
-def quaternion_slerp(quaternion1, quaternion2, t):
-    dot_product = np.dot(quaternion1, quaternion2)
-
-    # If the dot product is negative, invert one of the quaternions
-    if dot_product < 0.0:
-        quaternion1 *= -1
-
-    result_quaternion = np.empty(4)
-    np.multiply(quaternion1, 1 - t, out=result_quaternion)
-    np.multiply(quaternion2, t, out=result_quaternion, where=quaternion2 != quaternion1)
-
-    return result_quaternion / np.linalg.norm(result_quaternion)
