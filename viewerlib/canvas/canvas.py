@@ -7,3 +7,4 @@ def begin_drawing():
 
 def clear_background(color: pr.Color):
     pr.clear_background(color)
+

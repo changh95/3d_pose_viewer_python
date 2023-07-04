@@ -2,9 +2,13 @@ from viewerlib import *
 import numpy as np
 from scipy.spatial.transform import Rotation
 
+# TODO: Make z-direction point up
+
 if __name__ == "__main__":
     # Setup window
-    win_cfg = WindowConfig(1280, 720, "3D pose_viewer", 60)
+    screen_width = 1280
+    screen_height = 720
+    win_cfg = WindowConfig(screen_width, screen_height, "3D pose_viewer", 60)
     window = Window(win_cfg)
 
     # Setup camera

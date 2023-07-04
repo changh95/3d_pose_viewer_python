@@ -56,9 +56,23 @@ def draw_sphere(
 ):
     pr.draw_sphere(position, radius, color)
 
-
 def draw_grid(
         slices: int,
         spacing: float
 ):
     pr.draw_grid(slices, spacing)
+
+# TODO: Replace draw_grid by the new function
+# def draw_grid(
+#         screen_width: int,
+#         screen_height: int,
+#         spacing: float
+# ):
+#     # pr.draw_grid(slices, spacing)
+#
+#     # Draw the grid lines
+#     half_screen_width = int(screen_width * 0.5)
+#     for x in range(-half_screen_width, half_screen_width, int(spacing)):
+#         pr.draw_line(x, 0, x, 720, pr.BLACK)
+#     for y in range(-half_screen_width, half_screen_width, int(spacing)):
+#         pr.draw_line(0, y, 720, y, pr.BLACK)
