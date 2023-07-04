@@ -1,4 +1,5 @@
 from viewerlib import *
+from poselib import *
 import numpy as np
 from scipy.spatial.transform import Rotation
 
@@ -6,47 +7,38 @@ from scipy.spatial.transform import Rotation
 
 if __name__ == "__main__":
     # Setup window
-    screen_width = 1280
-    screen_height = 720
+    screen_width = 1920
+    screen_height = 1080
     win_cfg = WindowConfig(screen_width, screen_height, "3D pose_viewer", 60)
     window = Window(win_cfg)
 
     # Setup camera
-    cam_cfg = CameraConfig(np.array([18.0, 16.0, 18.0]), np.array([0.0, 0.0, 0.0]), np.array([0.0, 1.0, 0.0]), 45.0,
+    cam_starting_target = np.array([-1359, -1847, 118])
+    cam_starting_position = cam_starting_target + 10
+    cam_up_vector = np.array([0.0, 1.0, 0.0])
+    cam_cfg = CameraConfig(cam_starting_position, cam_starting_target, cam_up_vector, 45.0,
                            pr.CameraProjection.CAMERA_PERSPECTIVE, pr.CAMERA_THIRD_PERSON)
     cam = Camera3D(cam_cfg)
 
-    start_position = np.array([0.0, 0.0, 0.0])
-    end_position = np.array([5.0, 5.0, 5.0])
-
     # Generate motion
-    poses = []
-    position = np.array([0.5, 0.5, 0.0])
-    rotation = np.eye(3)
-    pose = np.eye(4)
-    pose[:3, :3] = rotation
-    pose[:3, 3] = position
+    left_poses = []
+    right_poses = []
+    raw_data = np.load('poses_bounds.npy', allow_pickle=True)
+    raw_data = raw_data[:, :-2]
+    for index, data in enumerate(raw_data):
+        data = data.reshape(3,5)
+        data = data[:, :-1]
 
-    # Straight motion
-    for iter in range(100):
-        poses.append(pose.copy())
-        pose[0, 3] += 1.0
+        if index % 2 == 0:
+            left_poses.append(data)
+        else:
+            right_poses.append(data)
 
-    # Spiral motion
-    transformation = np.eye(4)
-    rotation_first_frame = Rotation.from_euler('x', np.deg2rad(30)).as_matrix()
-    transformation[:3, :3] = rotation_first_frame
-    poses[0] = poses[0] @ transformation
+    center_poses = []
+    for left_pose, right_pose in zip(left_poses, right_poses):
+        center_poses.append(average_pose(left_pose, right_pose))
 
-    # for iter in range(100):
-    #     spin_radians = np.deg2rad(10.0)
-    #     rotation_matrix = Rotation.from_euler('x', spin_radians).as_matrix()
-    #     transformation = np.eye(4)
-    #     transformation[:3, :3] = rotation_matrix
-    #
-    #     pose = pose @ transformation
-    #     pose[0, 3] += 1.0
-    #     poses.append(pose)
+    center_poses = generate_spiral_motion(center_poses, np.deg2rad(20), 2)
 
     while not pr.window_should_close():
         cam.update_state()
@@ -55,13 +47,19 @@ if __name__ == "__main__":
         clear_background(pr.RAYWHITE)
 
         cam.begin_mode_3d()
-        draw_line_3d_np(start_position, end_position, pr.RED)
+        # draw_line_3d_np(np.array([0.0, 0.0, 0.0]), np.array([5.0, 5.0, 5.0]), pr.RED)
         draw_point_3d_np(np.array([10.0, 10.0, 10.0]), pr.RED)
         draw_sphere_np(np.array([10.0, 10.0, 10.0]), 0.1, pr.RED)
         draw_grid(200, 1.0)
 
-        for pose in poses:
-            draw_coordinate_frame(pose, PoseConvention.OPENCV)
+        for left_pose in left_poses:
+            draw_coordinate_frame(left_pose, PoseConvention.OPENCV)
+
+        for right_pose in right_poses:
+            draw_coordinate_frame(right_pose, PoseConvention.OPENCV)
+
+        for center_pose in center_poses:
+            draw_coordinate_frame(center_pose, PoseConvention.OPENCV)
 
         cam.end_mode_3d()
 
