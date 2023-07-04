@@ -2,6 +2,10 @@ from .config import WindowConfig
 import pyray as pr
 
 
+def close_window():
+    pr.close_window()
+
+
 class Window:
     def __init__(self,
                  window_config: WindowConfig

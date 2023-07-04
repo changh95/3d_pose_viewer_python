@@ -19,7 +19,7 @@ if __name__ == "__main__":
     start_position = np.array([0.0, 0.0, 0.0])
     end_position = np.array([5.0, 5.0, 5.0])
 
-    # Generate spiral motion
+    # Generate motion
     poses = []
     position = np.array([0.5, 0.5, 0.0])
     rotation = np.eye(3)
@@ -27,19 +27,20 @@ if __name__ == "__main__":
     pose[:3, :3] = rotation
     pose[:3, 3] = position
 
+    # Straight motion
     for iter in range(100):
         poses.append(pose.copy())
         pose[0, 3] += 1.0
 
-    # # first frame
-    # rotation_first_frame = Rotation.from_euler('y', np.deg2rad(30)).as_matrix()
-    # pose[:3, :3] = rotation_first_frame
-    # pose[:3, 3] = position
-    # poses.append(pose)
-    #
+    # Spiral motion
+    transformation = np.eye(4)
+    rotation_first_frame = Rotation.from_euler('x', np.deg2rad(30)).as_matrix()
+    transformation[:3, :3] = rotation_first_frame
+    poses[0] = poses[0] @ transformation
+
     # for iter in range(100):
     #     spin_radians = np.deg2rad(10.0)
-    #     rotation_matrix = Rotation.from_euler('z', spin_radians).as_matrix()
+    #     rotation_matrix = Rotation.from_euler('x', spin_radians).as_matrix()
     #     transformation = np.eye(4)
     #     transformation[:3, :3] = rotation_matrix
     #
@@ -60,35 +61,12 @@ if __name__ == "__main__":
         draw_grid(200, 1.0)
 
         for pose in poses:
-            draw_coordinate_frame(pose, PoseConvention.OPENGL)
-
-        # position = np.array([0.5, 0.5, 0.0])
-        # rotation = np.eye(3)
-        #
-        # extrinsic_matrix = np.eye(4)
-        # extrinsic_matrix[:3, :3] = rotation
-        # extrinsic_matrix[:3, 3] = position
-        #
-        # yaw_angle_degrees = 10.0
-        # yaw_angle_radians = np.deg2rad(yaw_angle_degrees)
-        # rotation_matrix = Rotation.from_euler('y', yaw_angle_radians).as_matrix()
-        # transformation = np.eye(4)
-        # transformation[:3, :3] = rotation_matrix
-        #
-        # for iter in range(10):
-        #     draw_coordinate_frame_np(extrinsic_matrix, PoseConvention.OPENCV)
-        #     extrinsic_matrix = extrinsic_matrix @ transformation
-        #     extrinsic_matrix[0, 3] += 1.0
+            draw_coordinate_frame(pose, PoseConvention.OPENCV)
 
         cam.end_mode_3d()
 
-        x_coord_pos = pr.get_world_to_screen(pr.Vector3(5, 0, 0), cam.camera)
-        y_coord_pos = pr.get_world_to_screen(pr.Vector3(0, 5, 0), cam.camera)
-        z_coord_pos = pr.get_world_to_screen(pr.Vector3(0, 0, 5), cam.camera)
-        pr.draw_text("x", int(x_coord_pos.x), int(x_coord_pos.y), 30, pr.BLACK)
-        pr.draw_text("y", int(y_coord_pos.x), int(y_coord_pos.y), 30, pr.BLACK)
-        pr.draw_text("z", int(z_coord_pos.x), int(z_coord_pos.y), 30, pr.BLACK)
-        pr.draw_text("WASD and mouse to move", 10, 30, 20, pr.VIOLET)
-        pr.draw_fps(10, 10)
-        pr.end_drawing()
-    pr.close_window()
+        draw_coordinate_label(5, 30, cam.camera)
+        draw_text("WASD and mouse to move", 10, 30, 20, pr.VIOLET)
+        draw_fps(10, 10)
+        end_drawing()
+    close_window()

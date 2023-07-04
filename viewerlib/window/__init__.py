@@ -1,2 +1,2 @@
-from .window import Window
-from .config import WindowConfig
+from .window import *
+from .config import *

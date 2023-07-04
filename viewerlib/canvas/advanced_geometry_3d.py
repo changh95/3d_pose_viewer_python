@@ -28,9 +28,18 @@ def draw_coordinate_frame(
 def draw_coordinate_frame_opencv(extrinsic_matrix_4x4: np.matrix):
     pos = pr.Vector3(extrinsic_matrix_4x4[0, 3], extrinsic_matrix_4x4[1, 3], extrinsic_matrix_4x4[2, 3])
 
-    x_dir = np.array([0.0, 0.0, 1.0])
-    y_dir = np.array([0.0, -1.0, 0.0])
-    z_dir = np.array([1.0, 0.0, 0.0])
+    rotation_matrix = np.array([0.0, 0.0, 1.0, 0.0,
+                                0.0, -1.0, 0.0, 0.0,
+                                1.0, 0.0, 0.0, 0.0,
+                                0.0, 0.0, 0.0, 1.0]).reshape(4, 4)
+
+    x_dir = np.array([1.0, 0.0, 0.0])
+    y_dir = np.array([0.0, 1.0, 0.0])
+    z_dir = np.array([0.0, 0.0, 1.0])
+
+    # x_dir = np.array([0.0, 0.0, 1.0])
+    # y_dir = np.array([0.0, -1.0, 0.0])
+    # z_dir = np.array([1.0, 0.0, 0.0])
 
     scale = 1.0
 
