@@ -1,7 +1,7 @@
 from viewerlib import *
 from poselib import *
 import numpy as np
-from scipy.spatial.transform import Rotation
+# import open3d as o3d
 
 # TODO: Make z-direction point up
 
@@ -34,11 +34,35 @@ if __name__ == "__main__":
         else:
             right_poses.append(data)
 
+    # Generate interpolated motion
+    new_left_poses = []
+    for i, left_pose in enumerate(left_poses):
+        if i == len(left_poses) - 1:
+            break
+        new_poses = slerp(left_poses[i], left_poses[i+1], 10)
+
+        for j, pose in enumerate(new_poses):
+            if j == len(new_poses) - 1:
+                break
+            new_left_poses.append(pose)
+
+    new_right_poses = []
+    for i, right_pose in enumerate(right_poses):
+        if i == len(right_poses) - 1:
+            break
+        new_poses = slerp(right_poses[i], right_poses[i+1], 10)
+
+        for j, pose in enumerate(new_poses):
+            if j == len(new_poses) - 1:
+                break
+            new_right_poses.append(pose)
+
+    # Create center poses
     center_poses = []
-    for left_pose, right_pose in zip(left_poses, right_poses):
+    for left_pose, right_pose in zip(new_left_poses, new_right_poses):
         center_poses.append(average_pose(left_pose, right_pose))
 
-    center_poses = generate_spiral_motion(center_poses, np.deg2rad(20), 1)
+    center_poses = generate_spiral_motion(center_poses, np.deg2rad(10), 1)
 
     while not pr.window_should_close():
         cam.update_state()
