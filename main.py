@@ -62,7 +62,7 @@ if __name__ == "__main__":
     for left_pose, right_pose in zip(new_left_poses, new_right_poses):
         center_poses.append(average_pose(left_pose, right_pose))
 
-    center_poses = generate_spiral_motion(center_poses, np.deg2rad(10), 1)
+    center_poses = generate_spiral_motion(center_poses, np.deg2rad(5), 30)
 
     while not pr.window_should_close():
         cam.update_state()
@@ -92,3 +92,5 @@ if __name__ == "__main__":
         draw_fps(10, 10)
         end_drawing()
     close_window()
+
+    np.save('center_poses_5_deg_30_interpol.npy', center_poses)

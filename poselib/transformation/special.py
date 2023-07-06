@@ -18,7 +18,7 @@ def generate_spiral_motion(poses: list[np.matrix],
     new_poses = copy.deepcopy(poses)
 
     spiral_transformations = []
-    spiral_LUT = generate_spiral_endpoints_LUT(np.deg2rad(30.0))
+    spiral_LUT = generate_spiral_endpoints_LUT(pitch_angle)
 
     if num_interpolation_between_spiral_endpoints > 0:
         while len(spiral_transformations) < len(new_poses):
