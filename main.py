@@ -62,7 +62,7 @@ if __name__ == "__main__":
     for left_pose, right_pose in zip(new_left_poses, new_right_poses):
         center_poses.append(average_pose(left_pose, right_pose))
 
-    center_poses = generate_spiral_motion(center_poses, np.deg2rad(5), 30)
+    center_poses = generate_spiral_motion(center_poses, np.deg2rad(10), 30)
 
     while not pr.window_should_close():
         cam.update_state()
@@ -76,11 +76,11 @@ if __name__ == "__main__":
         draw_sphere_np(np.array([10.0, 10.0, 10.0]), 0.1, pr.RED)
         draw_grid(200, 1.0)
 
-        for left_pose in left_poses:
-            draw_coordinate_frame(left_pose, PoseConvention.OPENCV)
-
-        for right_pose in right_poses:
-            draw_coordinate_frame(right_pose, PoseConvention.OPENCV)
+        # for left_pose in left_poses:
+        #     draw_coordinate_frame(left_pose, PoseConvention.OPENCV)
+        #
+        # for right_pose in right_poses:
+        #     draw_coordinate_frame(right_pose, PoseConvention.OPENCV)
 
         for center_pose in center_poses:
             draw_coordinate_frame(center_pose, PoseConvention.OPENCV)
@@ -93,4 +93,4 @@ if __name__ == "__main__":
         end_drawing()
     close_window()
 
-    np.save('center_poses_5_deg_30_interpol.npy', center_poses)
+    np.save('center_poses_10_deg_10x_pose_30x_spiral_interpol.npy', center_poses)
